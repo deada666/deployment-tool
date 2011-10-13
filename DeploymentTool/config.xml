@@ -1,0 +1,18 @@
+<deploymenttool>
+	<mainconf>
+		<registry>HIVE</registry>
+		<configsrv>10.10.10.101</configsrv>
+		<configlocation>Users</configlocation>
+		<clogin>PC-Name\User</clogin>
+		<cpassword>pass</cpassword>
+		<localcache>c:\cache</localcache>
+	</mainconf>
+	<repos>
+		<share>
+			<srvaddress>10.10.10.101</srvaddress>
+			<srvlocation>Users</srvlocation>
+			<login>PC-Name\User</login>
+			<password>pass</password>
+		</share>
+	</repos>
+</deploymenttool>
