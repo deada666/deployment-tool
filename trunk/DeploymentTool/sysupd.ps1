@@ -334,14 +334,14 @@ disconnectShare $clocation
 if($installlistlocal -or $installlistremote -or $uninstalllist -or $reinstalllist){
 	if($args[0] -eq "/FORCE"){
 		Write-Log "Start update forcefully."
-		#CAREFUL LOGOUT
-		doLogaut
+		#CAREFUL LOGOFF
+		doLogoff
 		updateSoftware
 	}
 	else{
 		if(doUpdate){
-			#CAREFUL LOGOUT
-			doLogaut
+			#CAREFUL LOGOFF
+			doLogoff
 			updateSoftware
 		}
 		else {
