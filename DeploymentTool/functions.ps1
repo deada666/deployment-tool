@@ -105,7 +105,7 @@ function executeCMD($path){
 	}
 }
 
-function global:doLogaut {
+function global:doLogoff {
 	$OS = (gwmi win32_computersystem).username
 	(Get-WmiObject -Class Win32_OperatingSystem -ComputerName .).InvokeMethod('Win32Shutdown',4)
 

@@ -14,7 +14,7 @@ set PRODUCT=PRODUCT_NAME
 set MANUFACTURER=MANUFACTURER_NAME
 
 REM Set inventory script path
-set SCRIPT_PATH=%windir%\%PACKAGE%.ps1
+set SCRIPT_PATH=%temp%\%PACKAGE%.ps1
 
 REM Put your install instruction here
 
