@@ -104,3 +104,18 @@ function executeCMD($path){
 		write-log $errmsg "error"
 	}
 }
+
+function global:doLogaut {
+	$OS = (gwmi win32_computersystem).username
+	(Get-WmiObject -Class Win32_OperatingSystem -ComputerName .).InvokeMethod('Win32Shutdown',4)
+
+	while($true){
+		$CS = (gwmi win32_computersystem).username
+		if($OS -eq $CS){
+			Start-Sleep -Seconds 10
+		}
+		else {
+			break
+		}
+	}
+}

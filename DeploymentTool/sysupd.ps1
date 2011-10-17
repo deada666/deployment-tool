@@ -335,13 +335,13 @@ if($installlistlocal -or $installlistremote -or $uninstalllist -or $reinstalllis
 	if($args[0] -eq "/FORCE"){
 		Write-Log "Start update forcefully."
 		#CAREFUL LOGOUT
-		(Get-WmiObject -Class Win32_OperatingSystem -ComputerName .).InvokeMethod("Win32Shutdown",0)
+		doLogaut
 		updateSoftware
 	}
 	else{
 		if(doUpdate){
 			#CAREFUL LOGOUT
-			(Get-WmiObject -Class Win32_OperatingSystem -ComputerName .).InvokeMethod("Win32Shutdown",0)
+			doLogaut
 			updateSoftware
 		}
 		else {
