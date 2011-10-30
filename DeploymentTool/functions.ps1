@@ -5,8 +5,8 @@
 #
 # Author: Andrew Levin
 # File name: functions.ps1
-# Version: 1.0
-# Last modification: 13.10.2011
+# Version: 1.1
+# Last modification: 30.10.2011
 #
 ######################################################################
 [reflection.assembly]::LoadWithPartialName("System.Windows.Forms") | out-null
@@ -69,11 +69,17 @@ function global:disconnectShare($slocation){
 	net use $slocation /DELETE
 }
 
-function global:shareConnect($srv, $location, $login, $password){
+function global:shareConnect($srv, $location, $login, $password, $drive = $null){
 	try {
 		if(Test-Connection $srv){
 			disconnectShare $location
-			net use $location /user:$login $password
+			#check required
+			if(!$drive){
+				net use $location /user:$login $password
+			}
+			else {
+				net use $drive $location /user:$login $password
+			}
 			if(Test-Path $location){
 				return $true
 			}

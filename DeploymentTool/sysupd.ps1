@@ -4,11 +4,11 @@
 #
 # Author: Andrew Levin
 # File name: sysupd.ps1
-# Version: 1.0
-# Last modification: 13.10.2011
+# Version: 1.1
+# Last modification: 30.10.2011
 #
 ######################################################################
-$ver="1.0"
+$ver="1.1"
 $ProgramName="DeploymentTool"
 
 $executingScriptDirectory = Split-Path -Path $MyInvocation.MyCommand.Definition -Parent
@@ -22,24 +22,25 @@ function updateSoftware{
 	}
 	#Share connect
 	$instsrv = $xmlconfig.deploymenttool.repos.share.srvaddress
-	$slocation = "\\" + $configsrv + "\" + $xmlconfig.deploymenttool.repos.share.srvlocation
+	$slocation = "\\" + $instsrv + "\" + $xmlconfig.deploymenttool.repos.share.srvlocation
 	$slogin = $xmlconfig.deploymenttool.repos.share.login
 	$spassword = $xmlconfig.deploymenttool.repos.share.password
+	$mapdrive = $xmlconfig.deploymenttool.mainconf.mapdrive + ":"
 	
-	if(!(shareConnect $instsrv $slocation $slogin $spassword)){
+	if(!(shareConnect $instsrv $slocation $slogin $spassword $mapdrive)){
 		write-log "Program stopped."
 		break
 	}
 	#End of share connect
 	
 	#Copying packages to local cache
-	$packagelist = Get-ChildItem $slocation
+	$packagelist = Get-ChildItem $mapdrive
 	foreach($item in $installlistlocal){
 		try{
 			$itemval = $item.toString()
 			foreach($pkg in $packagelist){
 				if($pkg -like "*$itemval"){
-					$pkgpath = $slocation + "\" + $pkg
+					$pkgpath = $mapdrive + "\" + $pkg
 					if(Test-Path $pkgpath){
 						Copy-Item $pkgpath -Recurse -Destination $cachefolder -Force
 					}
@@ -80,7 +81,7 @@ function updateSoftware{
 			if(!$done){
 				foreach($pkg in $packagelist){
 					if($pkg -like "*$itemval"){
-						$uncmd = $slocation + "\" + $pkg + "\Uninstall.cmd"
+						$uncmd = $mapdrive + "\" + $pkg + "\Uninstall.cmd"
 						executeCMD $uncmd
 						$done = $true
 						if(($LASTEXITCODE -eq 0) -or ($LASTEXITCODE -eq 3010)){
@@ -127,7 +128,7 @@ function updateSoftware{
 			if(!$done){
 				foreach($pkg in $packagelist){
 					if($pkg -like "*$itemval"){
-						$uncmd = $slocation + "\" + $pkg + "\Reinstall.cmd"
+						$uncmd = $mapdrive + "\" + $pkg + "\Reinstall.cmd"
 						executeCMD $uncmd
 						$done = $true
 						if(($LASTEXITCODE -eq 0) -or ($LASTEXITCODE -eq 3010)){
@@ -182,7 +183,7 @@ function updateSoftware{
 				$done = $false
 				foreach($pkg in $packagelist){
 					if($pkg -like "*$itemval"){
-						$uncmd = $slocation + "\" + $pkg + "\Install.cmd"
+						$uncmd = $mapdrive + "\" + $pkg + "\Install.cmd"
 						executeCMD $uncmd
 						$done = $true
 						if(($LASTEXITCODE -eq 0) -or ($LASTEXITCODE -eq 3010)){
@@ -200,15 +201,15 @@ function updateSoftware{
 					Write-log $errmsg "error"
 				}
 			}catch{}
-		} 
+		}
 	}
+	disconnectShare $mapdrive
 	#end of installation
-#Get-LoggedOn
 }
 #end of software update
 
 #Is single inscance?
-$mutex = new-object -TypeName System.Threading.Mutex -ArgumentList $false, “DeploymentToolMutex”;
+$mutex = new-object -TypeName System.Threading.Mutex -ArgumentList $false, “DeploymentToolMutex”
 
 if(!$mutex.WaitOne(0, $false)){
 	break
