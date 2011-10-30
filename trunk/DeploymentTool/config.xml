@@ -6,6 +6,7 @@
 		<clogin>PC-Name\User</clogin>
 		<cpassword>pass</cpassword>
 		<localcache>c:\cache</localcache>
+		<mapdrive>z</mapdrive>
 	</mainconf>
 	<repos>
 		<share>
